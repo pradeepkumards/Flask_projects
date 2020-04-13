@@ -1,5 +1,5 @@
 
-from password_encryption.app import app
+from Flask_projects.Encrypt_project.password_encryption.app import app
 
 
 if __name__ == '__main__':

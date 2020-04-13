@@ -1,28 +1,12 @@
 
 from flask import Flask
 import connexion
+from flask_injector import FlaskInjector
+from Flask_projects.Encrypt_project.password_encryption.service import configure
+from connexion.resolver import RestyResolver
 
-"""
-class GetUserDetails():
-
-    def get_user():
-        return "Say hello to all today!!!---"
-
-class CreateUpdateUsers():
-
-    def create_user():
-        return "creating user"
-
-
-    def update_user():
-        return "update user"
-
-
-    def delete_user():
-        return "delete user"
-"""
-
-app  = connexion.FlaskApp(__name__, port=4000, host='192.168.1.7',specification_dir='swagger/')
-app.add_api('user_password.yaml')
-
-
+# app  = connexion.FlaskApp(__name__, port=4000, host='192.168.1.7',specification_dir='swagger/')
+app  = connexion.FlaskApp(__name__, port=4000, specification_dir='swagger/')
+app.add_api('user_password.yaml', resolver=RestyResolver("api"))
+flask_injector = FlaskInjector(app=app.app)
+# , modules=[configure]
