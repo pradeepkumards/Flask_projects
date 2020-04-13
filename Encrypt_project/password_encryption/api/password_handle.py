@@ -1,5 +1,5 @@
 from flask_injector import inject
-from Flask_projects.Encrypt_project.password_encryption.service.provider import Users_details
+from Flask_projects.Encrypt_project.password_encryption.service.provider import Users_details, Users_create
 
 
 @inject
@@ -15,6 +15,5 @@ def User(username, user_provider: Users_details) -> list:
 
 
 @inject
-def User_create(user_provider: Users_details) -> list:
-
-    return user_provider.create()
+def User_create(user_add: Users_create) -> list:
+    return user_add.post()

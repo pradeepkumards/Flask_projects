@@ -1,7 +1,10 @@
 from flask import Request
 from flask_injector import inject
-from Flask_projects.Encrypt_project.password_encryption.utils.db_connection import connect_database, get_all, get_user, add_data_to_table
+from Flask_projects.Encrypt_project.password_encryption.utils.db_connection import connect_database, get_a_user, \
+    get_all_users, add_data_to_table
 from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel, Session
+import ast
+
 
 class Users_details:
     @inject
@@ -10,8 +13,9 @@ class Users_details:
 
     def get(self, **kwargs):
         print(self.request)
-        conn = connect_database("mysql://prad:prad@192.168.1.5:3306/logindb")
-        user_list = get_all('login_app_users', conn)
+        # conn = connect_database("mysql://prad:prad@192.168.1.5:3306/logindb")
+        user_list = get_all_users(Session)
+        print(user_list)
         user_role = []
         for i in user_list:
             u_r = (i[1], i[-1])
@@ -20,8 +24,7 @@ class Users_details:
 
     def get_username(self, user_name, **kwargs):
         print(self.request)
-        conn = connect_database("mysql://prad:prad@192.168.1.5:3306/UserPass")
-        user_list = get_user(user_name, 'user_pass_enc', conn)
+        user_list = get_a_user(Session, self.request.view_args.get("username"))
         user_role = []
         for i in user_list:
             u_r = (i[1], i[-1])
@@ -35,11 +38,11 @@ class Users_create:
         self.request = request
 
     def post(self, **kwargs):
-        # data_value = [("apple", "admin_role", "iuweciwue"), ("apple", "admin_role", "iuweciswue"),
-        #               ("apple", "user_role", "iuweciwaue")]
-        data_value = self.request.args()
+        data_value = ast.literal_eval(self.request.data.decode("UTF-8"))
         data_objs = []
         for i in data_value:
-            data_objs.append(UserModel(user_name=i[0], role=i[1], enc_password=i[2]))
+            data_objs.append(UserModel(user_name=i.get("user_name"),
+                                       role=i.get("role"),
+                                       enc_password=i.get("enc_password")))
         add_data_to_table(Session, data_objs)
         return "post success"

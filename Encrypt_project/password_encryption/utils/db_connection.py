@@ -1,28 +1,31 @@
-
 from sqlalchemy import create_engine
 from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel
-from sqlalchemy.orm import sessionmaker
+
 
 def connect_database(db_uri):
-    engine_db = create_engine(db_uri, connect_args={'connect_timeout':100})
+    engine_db = create_engine(db_uri, connect_args={'connect_timeout': 100})
     connect_db = engine_db.connect()
     return connect_db
+
 
 def add_data_to_table(session, data):
     # add_all/bulk_insert_mappings/bulk_save_objects
     session.bulk_save_objects(data)
     session.commit()
 
-def session_close(session):
-    session.close()
 
-def get_details(session):
-    # query = sess.query(ExampleModel).filter_by(user="Amit_shah")
+def get_all_users(session):
     query = session.query(UserModel)
     return session.execute(query).fetchall()
 
 
+def get_a_user(session, username):
+    query = session.query(UserModel).filter_by(user_name=username)
+    return session.execute(query).fetchall()
 
+
+def session_close(session):
+    session.close()
 
 # This is without using models
 # def get_all(table_name, db_conn):
