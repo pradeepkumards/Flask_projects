@@ -1,9 +1,32 @@
 from flask import Request
 from flask_injector import inject
-from Flask_projects.Encrypt_project.password_encryption.utils.db_connection import connect_database, get_a_user, \
+from Flask_projects.Encrypt_project.password_encryption.utils.db import connect_database, get_a_user, \
     get_all_users, add_data_to_table
-from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel, Session
+from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel, Session, AdminModel
 import ast
+import jwt
+from passlib.hash import pbkdf2_sha256
+
+
+class Login:
+    @inject
+    def __init__(self, request: Request):
+        self.request = request
+
+    def generate_token(self):
+        pass
+
+    def verify_token(self):
+        pass
+
+    def create_admin_user(self):
+        data_value = ast.literal_eval(self.request.data.decode("UTF-8"))
+        data_objs = []
+        for i in data_value:
+            data_objs.append(AdminModel(admin_user=i.get("admin_user"),
+                                       admin_password=i.get("admin_password")))
+        add_data_to_table(Session, data_objs)
+        return "creating admin user"
 
 
 class Users_details:
