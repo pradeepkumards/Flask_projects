@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel
+from Flask_projects.Encrypt_project.password_encryption.models.password_enc import UserModel, AdminModel
 
 
 def connect_database(db_uri):
@@ -14,6 +14,11 @@ def add_data_to_table(session, data):
     session.commit()
 
 
+def update_a_row(session, u_name, e_pass):
+    session.query(UserModel).filter_by(user_name=u_name).update({"enc_password": e_pass})
+    session.commit()
+
+
 def get_all_users(session):
     query = session.query(UserModel)
     return session.execute(query).fetchall()
@@ -21,6 +26,11 @@ def get_all_users(session):
 
 def get_a_user(session, username):
     query = session.query(UserModel).filter_by(user_name=username)
+    return session.execute(query).fetchall()
+
+
+def get_a_row(session, one_column):
+    query = session.query(AdminModel).filter_by(admin_user=one_column)
     return session.execute(query).fetchall()
 
 

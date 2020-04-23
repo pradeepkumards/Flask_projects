@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, Float, Boolean, 
 # from Flask_projects.Encrypt_project.password_encryption.settings.config import DevelopmentEnvironmentConfig as dev
 from Flask_projects.Encrypt_project.password_encryption.settings import config
 import datetime
+
 # db_uri = 'mysql://prad:prad@192.168.1.6:3306/UserPass'
 db_uri = config.DB_URL
 
@@ -21,7 +22,7 @@ class UserModel(Base):
     id = Column(Integer, primary_key=True)
     user_name = Column(String(200))
     role = Column(String(200))
-    enc_password = Column(String(200))
+    enc_password = Column(String(3000))
     created_on = Column(DateTime, default=datetime.datetime.utcnow)
     updated_on = Column(DateTime, default=datetime.datetime.utcnow)
 
